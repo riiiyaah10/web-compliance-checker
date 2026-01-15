@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compliance Report - Web Compliance Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-shield-alt"></i> Web Compliance Checker
+            </span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Back Button -->
+                <a href="/" class="btn btn-outline-primary mb-4">
+                    <i class="fas fa-arrow-left"></i> Back to Scanner
+                </a>
+
+                <!-- Report Header -->
+                <div class="card shadow-lg mb-4 border-0">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="mb-2">Compliance Report</h2>
+                                <p class="text-muted mb-0">{{ url }}</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="compliance-score">
+                                    <div class="score-number" id="scoreNumber">{{ results.compliance_score }}</div>
+                                    <div class="score-label">Compliance Score</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Checks -->
+                <div class="card shadow-lg mb-4 border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-lock"></i> Security Checks</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-globe"></i> HTTPS Enabled</span>
+                                {% if results.https_enabled %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Passed</span>
+                                {% else %}
+                                <span class="badge bg-danger"><i class="fas fa-times"></i> Failed</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-shield-alt"></i> Content-Security-Policy</span>
+                                {% if results['Content-Security-Policy'] %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Present</span>
+                                {% else %}
+                                <span class="badge bg-warning"><i class="fas fa-exclamation"></i> Missing</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-link"></i> Strict-Transport-Security</span>
+                                {% if results['Strict-Transport-Security'] %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Present</span>
+                                {% else %}
+                                <span class="badge bg-warning"><i class="fas fa-exclamation"></i> Missing</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-layer-group"></i> X-Frame-Options</span>
+                                {% if results['X-Frame-Options'] %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Present</span>
+                                {% else %}
+                                <span class="badge bg-warning"><i class="fas fa-exclamation"></i> Missing</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cookie & Consent Checks -->
+                <div class="card shadow-lg mb-4 border-0">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-cookie"></i> Cookie & Consent</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-database"></i> Cookies Used</span>
+                                {% if results.cookies_used %}
+                                <span class="badge bg-info"><i class="fas fa-check"></i> Detected</span>
+                                {% else %}
+                                <span class="badge bg-secondary"><i class="fas fa-times"></i> None Found</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-window-close"></i> Cookie Banner Detected</span>
+                                {% if results.cookie_banner_detected %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Found</span>
+                                {% else %}
+                                <span class="badge bg-danger"><i class="fas fa-times"></i> Not Found</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy & Legal Checks -->
+                <div class="card shadow-lg mb-4 border-0">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-file-contract"></i> Privacy & Legal</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-lock-open"></i> Privacy Policy</span>
+                                {% if results.privacy_policy_found %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Found</span>
+                                {% else %}
+                                <span class="badge bg-danger"><i class="fas fa-times"></i> Not Found</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="check-item">
+                            <div class="check-header">
+                                <span class="check-title"><i class="fas fa-file-alt"></i> Terms & Conditions</span>
+                                {% if results.terms_found %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Found</span>
+                                {% else %}
+                                <span class="badge bg-danger"><i class="fas fa-times"></i> Not Found</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <h5 class="alert-heading"><i class="fas fa-lightbulb"></i> Recommendations</h5>
+                    <ul class="mb-0 ps-3">
+                        {% if not results.https_enabled %}
+                        <li>Implement HTTPS/SSL to secure your website</li>
+                        {% endif %}
+                        {% if not results['Content-Security-Policy'] %}
+                        <li>Add Content-Security-Policy header to prevent XSS attacks</li>
+                        {% endif %}
+                        {% if not results['Strict-Transport-Security'] %}
+                        <li>Enable HSTS to enforce HTTPS connections</li>
+                        {% endif %}
+                        {% if not results.privacy_policy_found %}
+                        <li>Create and publish a privacy policy page</li>
+                        {% endif %}
+                        {% if not results.terms_found %}
+                        <li>Add terms and conditions page</li>
+                        {% endif %}
+                        {% if results.cookies_used and not results.cookie_banner_detected %}
+                        <li>Implement a cookie consent banner (GDPR/CCPA requirement)</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="alert alert-warning mt-4">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Disclaimer:</strong> 
+                    This tool provides technical compliance indicators only and does not constitute legal advice. 
+                    Consult with legal professionals for comprehensive compliance assessment.
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="text-center mt-5 mb-5">
+                    <a href="/" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-plus"></i> Scan Another Website
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-4 border-top">
+        <p class="text-muted mb-0">
+            <small>Web Compliance Checker &copy; 2026</small>
+        </p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
